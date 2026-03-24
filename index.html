@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+<title>Happy Anniversary 💖</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Itim', sans-serif;
+    background: linear-gradient(#ffc0cb, #ff9ecf);
+    overflow: hidden;
+}
+
+/* 💕 bg hearts */
+#bg { position: fixed; width: 100%; height: 100%; z-index: 0; }
+.bubble { position: absolute; bottom: -50px; opacity: 0.3; animation: floatUp linear infinite; }
+@keyframes floatUp { to { transform: translateY(-110vh); } }
+
+/* หน้าแรก */
+#home {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✨ เพิ่มหัวข้อ */
+.title {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    text-align: center;
+    font-size: 36px;
+    color: #ff1493;
+    text-shadow: 0 0 10px rgba(255,105,180,0.7);
+}
+
+.btn {
+    background: #ff4da6;
+    color: white;
+    padding: 30px 50px;
+    border-radius: 25px;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+/* scene */
+#scene {
+    display: none;
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+/* การ์ด flip + pop-up */
+.card-container {
+    perspective: 1000px;
+    width: 260px;
+    height: 360px;
+    z-index: 2;
+}
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+    cursor: pointer;
+    animation: popUp 0.5s ease;
+}
+@keyframes popUp {
+    0% { transform: scale(0.8) translateY(50px); }
+    50% { transform: scale(1.1) translateY(-10px); }
+    100% { transform: scale(1) translateY(0); }
+}
+.card.open { transform: rotateY(180deg) scale(1.05); }
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    backface-visibility: hidden;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+.front { background: url('card.jpg') center/cover no-repeat; }
+.back { background: url('photo.png') center/cover no-repeat; transform: rotateY(180deg); }
+
+/* Glow รอบการ์ด */
+.card-glow { box-shadow: 0 0 30px 8px rgba(255,105,180,0.7); }
+
+/* รูปซ้ายขวา */
+.side-img {
+    position: absolute;
+    width: 140px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 1s ease, opacity 1s ease;
+}
+.left { left: 10%; transform: translateX(-200px) translateY(20px); }
+.right { right: 10%; transform: translateX(200px) translateY(20px); }
+.show-img { opacity: 1; transform: translateX(0) translateY(0); }
+
+/* ข้อความ */
+.msg {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    text-align: center;
+    color: #ff1493;
+    font-size: 20px;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: 1.5s;
+}
+.msg.show { opacity: 1; transform: translateY(0) scale(1); }
+</style>
+</head>
+
+<body>
+
+<div id="bg"></div>
+<audio id="music" src="music.mp3"></audio>
+
+<div id="home">
+    <div class="title">Happy Anniversary 💖</div>
+    <div class="btn" onclick="start()">กดฉันสิ 💖</div>
+</div>
+
+<div id="scene">
+    <div class="card-container card-glow">
+        <div class="card" id="card">
+            <div class="card-face front"></div>
+            <div class="card-face back"></div>
+        </div>
+    </div>
+
+    <img src="photo-left.jpg" class="side-img left" id="leftImg">
+    <img src="photo-right.png" class="side-img right" id="rightImg">
+
+    <div class="msg" id="msg">
+        สุขสันต์วันครบรอบนะ อยู่ด้วยกันจริงๆมา 4 เดือนแล้ว<br>
+        ขอบคุณที่คอยอยู่ข้างๆเค้ามาตลอดนะ รักอ้วงนะ จุ๊บๆ 💖
+    </div>
+</div>
+
+<script>
+// 💕 bg hearts
+function createBubble(){
+    let b=document.createElement("div");
+    b.className="bubble";
+    b.innerHTML="💗";
+    b.style.left=Math.random()*100+"%";
+    b.style.fontSize=(15+Math.random()*20)+"px";
+    b.style.animationDuration=(6+Math.random()*6)+"s";
+    document.getElementById("bg").appendChild(b);
+    setTimeout(()=>b.remove(),12000);
+}
+setInterval(createBubble,500);
+
+// หน้าแรก
+function start(){
+    home.style.display="none";
+    scene.style.display="flex";
+}
+
+// กดการ์ด
+const card = document.getElementById("card");
+card.addEventListener("click", ()=>{
+    card.classList.add("open");
+
+    setTimeout(()=>{
+        document.getElementById("leftImg").classList.add("show-img");
+        document.getElementById("rightImg").classList.add("show-img");
+
+        document.getElementById("music").play();
+
+        setTimeout(()=>{
+            document.getElementById("msg").classList.add("show");
+        },500);
+
+    },2000);
+});
+</script>
+
+</body>
+</html>
